@@ -43,6 +43,16 @@ def count_links(file_path):
     return counter_dict
 
 
+def generate_html_page(data):
+    with open("index.html", "w", encoding="utf-8") as output:
+        output.write('<!DOCTYPE html><html lang="en"><head><meta '
+                     'charset="UTF-8"><title>Title</title></head><body><table><tr><th>Имя статьи</th><th>Количество '
+                     'ссылок на неё</th></tr>')
+        for (article_name, number) in data:
+            output.write(f"<tr><td>{article_name}</td><td>{number}</td></tr>")
+        output.write("</table></body></html>")
+
+
 if __name__ == '__main__':
     file_path = input("Введите путь к .bz2 архиву с дампом википедии\n")
     time_start = time.time()
@@ -51,6 +61,5 @@ if __name__ == '__main__':
     delta = time_end - time_start
     article_names = sorted(filter(lambda x: 2500 <= int(x[1]) <= 5000, ans.items()), key=lambda x: int(x[1]),
                            reverse=True)
-    max_width = len(max(article_names, key=lambda x: len(x[0]))[0])
-    print("".join(map(lambda x: f"{x[0].ljust(max_width + 2)} {x[1]}\n", article_names)))
+    generate_html_page(article_names)
     print("%.0f" % (delta // 60), "m", "%.2f" % (delta % 60), "s")
